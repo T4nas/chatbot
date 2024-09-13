@@ -1,56 +1,54 @@
+# streamlit_app.py
+
 import streamlit as st
-from openai import OpenAI
+import requests
 
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
-)
+# IBM Watson X API details
+url = "https://eu-de.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
+headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "Authorization": "Bearer eyJraWQiOiIyMDI0MDkwMjA4NDIiLCJhbGciOiJSUzI1NiJ9.eyJpYW1faWQiOiJJQk1pZC02OTIwMDBKRUY0IiwiaWQiOiJJQk1pZC02OTIwMDBKRUY0IiwicmVhbG1pZCI6IklCTWlkIiwianRpIjoiYzk0ODljMTQtYjQwNi00NzgzLWE2ODUtNDQ0YTVjZTQ5N2EyIiwiaWRlbnRpZmllciI6IjY5MjAwMEpFRjQiLCJnaXZlbl9uYW1lIjoiQW5lcyIsImZhbWlseV9uYW1lIjoiVGFpY2hhIiwibmFtZSI6IkFuZXMgVGFpY2hhIiwiZW1haWwiOiJ0aG5leXRpQHByb3Rvbm1haWwuY29tIiwic3ViIjoidGhuZXl0aUBwcm90b25tYWlsLmNvbSIsImF1dGhuIjp7InN1YiI6InRobmV5dGlAcHJvdG9ubWFpbC5jb20iLCJpYW1faWQiOiJJQk1pZC02OTIwMDBKRUY0IiwibmFtZSI6IkFuZXMgVGFpY2hhIiwiZ2l2ZW5fbmFtZSI6IkFuZXMiLCJmYW1pbHlfbmFtZSI6IlRhaWNoYSIsImVtYWlsIjoidGhuZXl0aUBwcm90b25tYWlsLmNvbSJ9LCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiJkZWQ2MzljOGQxMGY0NGIzYWU0NTg4NmU3OGYxZDJjYSIsImltc191c2VyX2lkIjoiMTI2NzY5NzUiLCJmcm96ZW4iOnRydWUsImltcyI6IjI3NDY0MTYifSwiaWF0IjoxNzI2MjQ2MjMzLCJleHAiOjE3MjYyNDk4MzMsImlzcyI6Imh0dHBzOi8vaWFtLmNsb3VkLmlibS5jb20vaWRlbnRpdHkiLCJncmFudF90eXBlIjoidXJuOmlibTpwYXJhbXM6b2F1dGg6Z3JhbnQtdHlwZTphcGlrZXkiLCJzY29wZSI6ImlibSBvcGVuaWQiLCJjbGllbnRfaWQiOiJkZWZhdWx0IiwiYWNyIjoxLCJhbXIiOlsicHdkIl19.QrEA0Ft_Vqr_BHAPiIuBmC99F_hAftMwyACLoSUPFdElAXrBbrRq8phEPOgfiVyhjxOUnDjrf0f5ECcODtv0oaqtOf9-1vskkrYjpqWLhEjYAzF3sKFLoiFmLcqNBppSBLsITg7_V-ux4CZ7yx7uR_EQbhFwIjv6X_iL-SEUZT_3-D4_zB2wgWVkTo6PeF79sE9YQ7sllkXc9_C7VaYknMBELM-y75l0DdppRZY2yHCFxn_t_0DzvMFAkJbDG-_DmUs1bYmwgqJKPzTKPPU8nSlmyzzsuofCRTMwze93nc97WDiIMgBlp0aCCaVvQ3TRa6zMbpnHtM8V6TZo7veebQ"
+}
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# Streamlit interface
+st.title("IBM Watson X Chatbot Interface")
+st.write("Interact with the IBM Watson X model directly from this interface.")
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# Input text from user
+user_input = st.text_area("Enter your question or prompt:")
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+# Button to send the request
+if st.button("Generate Response"):
+    if user_input.strip() == "":
+        st.error("Please enter a prompt.")
+    else:
+        # Prepare the request body
+        body = {
+            "input": user_input,
+            "parameters": {
+                "decoding_method": "greedy",
+                "max_new_tokens": 900,
+                "repetition_penalty": 1
+            },
+            "model_id": "sdaia/allam-1-13b-instruct",
+            "project_id": "cb0d224c-3a53-4fec-ab52-a5f3dd088ba2"
+        }
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        # Make the request to the IBM Watson X API
+        try:
+            response = requests.post(url, headers=headers, json=body)
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+            # Check for successful response
+            if response.status_code == 200:
+                data = response.json().get('results', [{}])[0].get('generated_text', '').strip()
+                if data:
+                    st.success("Response:")
+                    st.write(data)
+                else:
+                    st.warning("No response generated.")
+            else:
+                st.error(f"Error: {response.status_code}\n{response.text}")
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
