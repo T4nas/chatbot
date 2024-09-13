@@ -12,16 +12,16 @@ headers = {
 }
 
 # Streamlit interface
-st.title("IBM Watson X Chatbot Interface")
-st.write("Interact with the IBM Watson X model directly from this interface.")
+st.title("AjurrumAI ¢")
+st.write("Discute avec le plus grand spécialiste de grammaire arabe !")
 
 # Input text from user
-user_input = st.text_area("Enter your question or prompt:")
+user_input = st.text_area("Pose ta question, ou dit ce qui te passe par la tête : ")
 
 # Button to send the request
-if st.button("Generate Response"):
+if st.button("Réponse"):
     if user_input.strip() == "":
-        st.error("Please enter a prompt.")
+        st.error("Veuillez entrer quelque-chose.")
     else:
         # Prepare the request body
         body = {
@@ -46,7 +46,7 @@ if st.button("Generate Response"):
                     st.success("Response:")
                     st.write(data)
                 else:
-                    st.warning("No response generated.")
+                    st.warning("Pas de réponse")
             else:
                 st.error(f"Error: {response.status_code}\n{response.text}")
 
