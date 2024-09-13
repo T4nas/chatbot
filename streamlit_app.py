@@ -12,7 +12,7 @@ headers = {
 }
 
 # Streamlit interface
-st.title("AjurrumAI ¢")
+st.title("AjurrumAI 😃")
 st.write("Discute avec le plus grand spécialiste de grammaire arabe !")
 
 # Input text from user
