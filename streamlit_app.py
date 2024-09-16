@@ -73,7 +73,7 @@ elif menu == 'Login / تسجيل الدخول':
 
 # Input text from user
 user_input = st.text_area("Ask your question or say what's on your mind: / اطرح سؤالك أو قل ما يدور في ذهنك:")
-خطا في الاسم او كلمة المورور
+
 # Button to send the request
 if st.button("Submit / إرسال"):
     if user_input.strip() == "":
@@ -81,7 +81,6 @@ if st.button("Submit / إرسال"):
 
     else:
         # Adapt prompt based on interaction mode and ag
-        e
         prompt = ""
         # Prepare the request body
         body = {
