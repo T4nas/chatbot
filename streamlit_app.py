@@ -25,6 +25,24 @@ with st.sidebar:
     elif option == "Voir les paramètres":
         st.info("Ajustez les paramètres pour adapter l'interaction.")
 
+menu = st.sidebar.selectbox('Menu', ['Login', 'Sign Up'])
+
+if menu == 'Sign Up':
+    st.subheader('Create an Account')
+    username = st.text_input('Username')
+    password = st.text_input('Password', type='password')
+    if st.button('Sign Up'):
+        message = create_user(username, password)
+        st.success(message)
+
+elif menu == 'Login':
+    st.subheader('Login')
+    username = st.text_input('Username')
+    password = st.text_input('Password', type='password')
+    if st.button('Login'):
+        message = authenticate_user(username, password)
+        st.success(message)
+
 # Header for interaction mode
 st.header("Mode d'interaction")
 interaction_mode = st.selectbox("Choisissez le mode", ["Avancer dans le cours", "Discuter avec le professeur"])
