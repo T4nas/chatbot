@@ -36,8 +36,9 @@ with st.sidebar:
         st.subheader('Create an Account / إنشاء حساب')
         username = st.text_input('Username / اسم المستخدم')
         password = st.text_input('Password / كلمة المرور', type='password')
+        age = st.slider("Choose your age / اختر عمرك", 0, 100, 20)
         if st.button('Sign Up / تسجيل'):
-            message = create_user(username, password)
+            message = create_user(username, password, age)
             st.success(message)
 
     elif menu == 'Login / تسجيل الدخول':
@@ -49,8 +50,6 @@ with st.sidebar:
             st.success(message)
 
 
-# Age selector
-age = st.slider("Choose your age / اختر عمرك", 0, 100, 20)
 
 # Input text from user
 user_input = st.text_area("Ask your question or say what's on your mind: / اطرح سؤالك أو قل ما يدور في ذهنك:")
