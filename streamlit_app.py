@@ -4,13 +4,6 @@ import requests
 import prompts
 import config
 
-def send_prompt(prompt):
-
-
-
-# Streamlit interface
-import streamlit as st
-
 # Page configuration
 st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
 st.title("AjurrumAI 😃")
