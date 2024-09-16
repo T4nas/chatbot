@@ -12,8 +12,25 @@ headers = {
 }
 
 # Streamlit interface
+st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
 st.title("AjurrumAI 😃")
 st.write("Discute avec le plus grand spécialiste de grammaire arabe !")
+
+# Sidebar for navigation
+with st.sidebar:
+    st.header("Navigation")
+    option = st.radio("Choisissez une option", ["Commencer un nouveau chat", "Voir les paramètres"])
+    if option == "Commencer un nouveau chat":
+        st.info("Vous pouvez maintenant commencer une nouvelle conversation.")
+    elif option == "Voir les paramètres":
+        st.info("Ajustez les paramètres pour adapter l'interaction.")
+
+# Header for interaction mode
+st.header("Mode d'interaction")
+interaction_mode = st.selectbox("Choisissez le mode", ["Avancer dans le cours", "Discuter avec le professeur"])
+
+# Age selector
+age = st.slider("Choisissez votre âge", 0, 100, 20)
 
 # Input text from user
 user_input = st.text_area("Pose ta question, ou dit ce qui te passe par la tête : ")
@@ -23,9 +40,16 @@ if st.button("Réponse"):
     if user_input.strip() == "":
         st.error("Veuillez entrer quelque-chose.")
     else:
+        # Adapt prompt based on interaction mode and age
+        prompt = ""
+        if interaction_mode == "Avancer dans le cours":
+            prompt = f"Je suis un étudiant de {age} ans qui souhaite avancer dans le cours. Voici ma question : {user_input}"
+        elif interaction_mode == "Discuter avec le professeur":
+            prompt = f"Je suis un étudiant de {age} ans et je souhaite discuter avec le professeur. Voici ma question : {user_input}"
+        
         # Prepare the request body
         body = {
-            "input": user_input,
+            "input": prompt,
             "parameters": {
                 "decoding_method": "greedy",
                 "max_new_tokens": 900,
@@ -43,12 +67,12 @@ if st.button("Réponse"):
             if response.status_code == 200:
                 data = response.json().get('results', [{}])[0].get('generated_text', '').strip()
                 if data:
-                    st.success("Response:")
+                    st.success("Réponse :")
                     st.write(data)
                 else:
                     st.warning("Pas de réponse")
             else:
-                st.error(f"Error: {response.status_code}\n{response.text}")
+                st.error(f"Erreur : {response.status_code}\n{response.text}")
 
         except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+            st.error(f"Une erreur est survenue : {str(e)}")
