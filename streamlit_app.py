@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
 
-import prompts
-import config
+#import prompts
+#import config
 
 # Page configuration
 st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
