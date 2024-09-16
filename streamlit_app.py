@@ -40,38 +40,36 @@ user_var_set = {
     "chapter" : "None"
 }
 
-    st.header("Identification / تسجيل الدخول")
+st.header("Identification / تسجيل الدخول")
 
-    menu = st.sidebar.selectbox('Menu / القائمة',
-                                ['Login / تسجيل الدخول',
-                                 'Sign Up / تسجيل حساب'])
+menu = st.sidebar.selectbox('Menu / القائمة',['Login / تسجيل الدخول','Sign Up / تسجيل حساب'])
 
-    if menu == 'Sign Up / تسجيل حساب':
-        st.subheader('Create an Account / إنشاء حساب')
-        username = st.text_input('Username / اسم المستخدم')
-        password = st.text_input('Password / كلمة المرور', type='password')
-        age = st.slider("Choose your age / اختر عمرك", 0, 100, 20)
-        if st.button('Sign Up / تسجيل'):
-            message = register(username, password, age)
+if menu == 'Sign Up / تسجيل حساب':
+    st.subheader('Create an Account / إنشاء حساب')
+    username = st.text_input('Username / اسم المستخدم')
+    password = st.text_input('Password / كلمة المرور', type='password')
+    age = st.slider("Choose your age / اختر عمرك", 0, 100, 20)
+    if st.button('Sign Up / تسجيل'):
+        message = register(username, password, age)
 
-            if message == EtatsDB.USERNAME_US:
-                st.fail("You can't use this username - لا يمكنك استخدام هذا الإسم")
-            else:
-                st.success(message)
-                login(username, password)
+        if message == EtatsDB.USERNAME_US:
+            st.fail("You can't use this username - لا يمكنك استخدام هذا الإسم")
+        else:
+            st.success(message)
+            login(username, password)
 
-    elif menu == 'Login / تسجيل الدخول':
-        st.subheader('Login / تسجيل الدخول')
-        username = st.text_input('Username / اسم المستخدم')
-        password = st.text_input('Password / كلمة المرور', type='password')
-        if st.button('Login / تسجيل الدخول'):
-            message = login(username, password)
-            if message  == EtatsDB.INCOR_CREDS:
-                st.fail("Incorrect username or password - خطا في الاسم او كلمة المورور")
-            else:
-                st.success(message)
-                user_var_set["connected"] = True
-                user_var_set["username"] = username
+elif menu == 'Login / تسجيل الدخول':
+    st.subheader('Login / تسجيل الدخول')
+    username = st.text_input('Username / اسم المستخدم')
+    password = st.text_input('Password / كلمة المرور', type='password')
+    if st.button('Login / تسجيل الدخول'):
+        message = login(username, password)
+        if message  == EtatsDB.INCOR_CREDS:
+            st.fail("Incorrect username or password - خطا في الاسم او كلمة المورور")
+        else:
+            st.success(message)
+            user_var_set["connected"] = True
+            user_var_set["username"] = username
 
 # Input text from user
 user_input = st.text_area("Ask your question or say what's on your mind: / اطرح سؤالك أو قل ما يدور في ذهنك:")
