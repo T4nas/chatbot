@@ -1,3 +1,4 @@
 streamlit
 ibm-cloud-sdk-core
 ibm-watsonx-ai
+pymongo
